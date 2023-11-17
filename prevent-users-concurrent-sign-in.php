@@ -20,12 +20,12 @@ function pucsi_logins_count_field_callback( $user ) {
     //If the data already exists in the new meta data field, it obtains new data in the region,
     $value = get_user_meta($user->ID, '_login_count');
     //Set up a label filter to allow users to customize labels when they need to use filters
-    $fieldLable = apply_filters('pucsi_restrict_number_of_sign_ins_lable',__('Restrict the number of sign-in sessions at a time ','pucsi'));
+    $fieldLable = apply_filters( 'pucsi_restrict_number_of_sign_ins_label', esc_html__( 'Restrict the number of sign-in sessions at a time', 'pucsi' ) );
     //Create a simple HTML entry field to save the number of sign-in sessions
     $html = '<table class="form-table">
                 <tbody>
                     <tr class="form-field">
-                        <th scope="row"><label for="_login_count">'.$fieldLable.'</label></th>
+                        <th scope="row"><label for="_login_count">' . esc_html( $fieldLable ) . '</label></th>
                         <td><input name="_login_count" id="_login_count" value="'.esc_attr( stripslashes( $value[0] ) ).'" type="text" size="10"></td>
                     </tr>
                 <tbody>
@@ -54,7 +54,7 @@ function pucsi_update_logins_count_field_callback( $user_id ) {
     //Check whether the custom field (that is, '_login_count' ) has set, if set update data to user meta
     if (isset( $_POST['_login_count'] ) ) {
         //Save custom field data to the user's meta
-        update_user_meta($user_id, '_login_count', $_POST['_login_count']);
+        update_user_meta( $user_id, '_login_count', sanitize_text_field( $_POST['_login_count'] ) );
     }
 
 }
@@ -71,7 +71,7 @@ add_action( 'edit_user_profile_update', 'pucsi_update_logins_count_field_callbac
  */
 function pucsi_modify_user_table_callback( $column ) {
     //Set up a header label filter to allow users to customize labels when they need to use filters
-    $headerLable = apply_filters('pucsi_restrict_number_of_sign_ins_header',__('Restrict the number of sign-in sessions at a time','pucsi'));
+    $headerLable = apply_filters('pucsi_restrict_number_of_sign_ins_header', esc_html__( 'Restrict the number of sign-in sessions at a time', 'pucsi' ) );
     //set the column header
     $column['_login_count'] = $headerLable;
     //return
@@ -216,7 +216,7 @@ function pucsi_auth_signon_callback( $user, $username, $password ) {
             // we got all the sessions, just destroy them all at once.
             $sessions->destroy_all();		
             //message
-            $message = sprintf(__('Max %s login sessions are allowed at a time, Please contact your site administrator for more details.', 'pucsi'), $_login_count);
+            $message = sprintf( esc_html__( 'Max %s login sessions are allowed at a time. Please contact your site administrator for more details.', 'pucsi' ), $_login_count );
             //Set up a error message filter to allow users to customize error message when they need to use filters
             $message = apply_filters('pucsi_restrict_number_of_sign_ins_error_message',$message,count($login_timestamps),$_login_count);
             //return a error message
