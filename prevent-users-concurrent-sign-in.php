@@ -16,6 +16,9 @@ Version: 1.0
 /**
  * Add a new field to the admin profile page, to set session sign-in restriction to the user callback
  */
+ 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 function pucsi_logins_count_field_callback( $user ) {
     //If the data already exists in the new meta data field, it obtains new data in the region,
     $value = get_user_meta($user->ID, '_login_count');
@@ -31,7 +34,7 @@ function pucsi_logins_count_field_callback( $user ) {
                 <tbody>
 	            </table>';
     //Display a snippet of HTML input
-    echo $html;
+    echo wp_kses_post( $html );
 }
 
 /**
